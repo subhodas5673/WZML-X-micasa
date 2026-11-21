@@ -53,9 +53,11 @@ python script.py
 ### Step 3: Enter Your Credentials
 
 When prompted, enter:
-- **API KEY**: `12345678:AbCdEfGhIjKlMnOpQrStUvWxY`
-- **API HASH**: Your 32-character hash
-- **Phone**: Your number with country code (e.g., +91XXXXXXXXXX)
+- **API ID**: Your Telegram App api_id number from my.telegram.org (e.g., `12345678`)
+- **API HASH**: Your 32-character App api_hash (e.g., `1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p`)
+- **Phone**: Your Telegram phone number with country code (e.g., `+91XXXXXXXXXX`)
+
+> **Note**: Do **not** enter a Bot Token (`123456:AbCd...`) from `@BotFather` here. This script generates a **User Session** string using your Telegram account credentials from `my.telegram.org/apps`.
 
 ### Step 4: Verify Authentication
 
@@ -86,7 +88,7 @@ This script uses interactive prompts. No CLI flags available.
 
 | Behavior | Description |
 |----------|-------------|
-| Validation | API key must contain colon, API hash must be 32 chars |
+| Validation | API ID must be a positive integer, API hash must be 32 chars |
 | Phone format | Must include country code (+1, +91, etc.) |
 | Session storage | In-memory only, not saved to disk |
 | Device info | Custom app version and device model |
@@ -123,7 +125,7 @@ This string contains encrypted credentials for your Telegram account.
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| `Invalid API key format` | Wrong format | Use format: `12345678:AbCdEfGh...` |
+| `Invalid API ID format` | Wrong format | Use integer API ID from my.telegram.org (e.g., `12345678`) |
 | `API HASH must be 32 characters` | Wrong length | Copy exact 32 chars from my.telegram.org |
 | `Invalid phone format` | Missing country code | Include + and country code |
 | `Pyrogram not installed` | Missing dependencies | `pip install pyrogram tgcrypto` |

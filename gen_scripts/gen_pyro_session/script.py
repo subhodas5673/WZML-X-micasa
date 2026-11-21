@@ -11,10 +11,14 @@ import sys
 try:
     from pyrogram import Client
 except Exception:
-    print("\n[ERROR] Pyrogram not installed!")
-    print("\nInstall required dependencies:")
-    print("  pip install pyrogram tgcrypto")
-    sys.exit(1)
+    try:
+        from wzgram import Client
+    except Exception:
+        print("\n[ERROR] Pyrogram or Wzgram is not installed!")
+        print("\nInstall required dependencies:")
+        print("  pip install pyrogram tgcrypto")
+        print("  (or: pip install wzgram tgcrypto)")
+        sys.exit(1)
 
 
 def print_header(title: str) -> None:
@@ -29,12 +33,21 @@ def print_step(step: int, total: int, message: str) -> None:
     print(f"\n[{step}/{total}] {message}")
 
 
-def validate_api_key(api_key: str) -> bool:
-    """Validate API key format."""
-    if not api_key:
-        return False
-    # API key should contain a colon and numbers
-    return ":" in api_key and api_key.split(":")[0].isdigit()
+def parse_api_id(raw_input: str):
+    """Validate and parse Telegram API ID.
+
+    Accepts:
+    - Standard integer API ID: e.g. 12345678
+    - Token format if accidentally pasted with colon: e.g. 12345678:AbCdEf...
+    """
+    if not raw_input:
+        return None
+    cleaned = raw_input.strip()
+    if ":" in cleaned:
+        cleaned = cleaned.split(":", 1)[0].strip()
+    if cleaned.isdigit() and int(cleaned) > 0:
+        return int(cleaned)
+    return None
 
 
 def main():
@@ -43,22 +56,25 @@ def main():
     print("\nThis script creates a session string for your Telegram account.")
     print("The session string will be sent to your Telegram Saved Messages.\n")
 
-    # Step 1: Get API Key
+    # Step 1: Get API Credentials
     print_step(1, 3, "Enter Telegram API Credentials")
+    print("Note: Get API ID and API HASH from https://my.telegram.org/apps")
+    print("(Do NOT use Bot Token from BotFather here; user sessions require your account API ID)\n")
 
     while True:
-        api_key = input(
-            "Enter TELEGRAM API KEY (e.g., 12345678:AbCdEfGhIjKlMnOpQrStUvWxY): "
+        raw_api_id = input(
+            "Enter TELEGRAM API ID (number, e.g., 12345678): "
         ).strip()
-        if validate_api_key(api_key):
+        api_id = parse_api_id(raw_api_id)
+        if api_id is not None:
             break
         print(
-            "[ERROR] Invalid API key format. Should be like: 12345678:AbCdEfGhIjKlMnOpQrStUvWxY"
+            "[ERROR] Invalid API ID. It must be a valid number from https://my.telegram.org/apps"
         )
 
     while True:
         api_hash = input(
-            "Enter TELEGRAM API HASH (32 chars, e.g., 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7): "
+            "Enter TELEGRAM API HASH (32 hex chars, e.g., 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p): "
         ).strip()
         if len(api_hash) == 32:
             break
@@ -81,7 +97,7 @@ def main():
         with Client(
             name="WZUser",
             in_memory=True,
-            api_id=int(api_key.split(":")[0]),
+            api_id=api_id,
             api_hash=api_hash,
             phone_number=phone,
             app_version="@WZML_X User Session",
