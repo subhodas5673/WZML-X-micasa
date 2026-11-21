@@ -27,8 +27,9 @@
    - API Hash
 3. **Python dependencies**:
    ```bash
-   pip install pyrogram tgcrypto
+   pip install pyrogram
    ```
+   *(Note: `tgcrypto` is optional and requires C++ build tools on Windows; `pip install pyrogram` is all you need)*
 
 ---
 

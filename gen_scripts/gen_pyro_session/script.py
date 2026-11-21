@@ -16,8 +16,8 @@ except Exception:
     except Exception:
         print("\n[ERROR] Pyrogram or Wzgram is not installed!")
         print("\nInstall required dependencies:")
-        print("  pip install pyrogram tgcrypto")
-        print("  (or: pip install wzgram tgcrypto)")
+        print("  pip install pyrogram")
+        print("  (Note: tgcrypto is optional and not required)")
         sys.exit(1)
 
 
